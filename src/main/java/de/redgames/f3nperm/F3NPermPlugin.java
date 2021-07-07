@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class F3NPermPlugin extends JavaPlugin implements Listener {
@@ -25,9 +26,13 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
         bypassPermissionChecking = new File(".bypass_permission_checking").exists();
 
         try {
-            reflector = new Reflector();
-        } catch (Throwable e) {
-            logger.severe("Could not load plugin for this version... (Server version might be incompatible)");
+            reflector = new Reflector_1_17();
+        } catch (Exception e) {
+            try {
+                reflector = new Reflector_1_8();
+            } catch (Exception e2) {
+                logger.log(Level.SEVERE, "Could not load plugin for this version... (Server version might be incompatible)", e);
+            }
         }
 
         logger.info("Plugin loaded!");
@@ -74,32 +79,47 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    private class Reflector {
+    private static abstract class Reflector {
         private static final byte STATUS_BYTE = 28;
 
-        private final Class<?> entityStatusPacketClass;
-        private final Class<?> playerConnectionClass;
-        private final Class<?> entityClass;
-        private final Class<?> packetClass;
+        protected Class<?> entityStatusPacketClass;
+        protected Class<?> playerConnectionClass;
+        protected Class<?> entityClass;
+        protected Class<?> packetClass;
+        protected String playerConnectionField;
 
-        private Reflector() throws ClassNotFoundException {
-            String namespace = getServer().getClass().getPackage().getName().split("\\.")[3];
-
-            entityStatusPacketClass = Class.forName("net.minecraft.server." + namespace + ".PacketPlayOutEntityStatus");
-            playerConnectionClass = Class.forName("net.minecraft.server." + namespace + ".PlayerConnection");
-            entityClass = Class.forName("net.minecraft.server." + namespace + ".Entity");
-            packetClass = Class.forName("net.minecraft.server." + namespace + ".Packet");
-        }
-
-        private void sendEntityStatus(Player p) {
+        public void sendEntityStatus(Player p) {
             try {
                 Object entityPlayer = p.getClass().getDeclaredMethod("getHandle").invoke(p);
-                Object playerConnection = entityPlayer.getClass().getDeclaredField("playerConnection").get(entityPlayer);
+                Object playerConnection = entityPlayer.getClass().getDeclaredField(playerConnectionField).get(entityPlayer);
                 Object packet = entityStatusPacketClass.getConstructor(entityClass, byte.class).newInstance(entityPlayer, STATUS_BYTE);
                 playerConnectionClass.getDeclaredMethod("sendPacket", packetClass).invoke(playerConnection, packet);
             } catch (Throwable e) {
                 throw new RuntimeException("Error while sending entity status 28", e);
             }
+        }
+    }
+
+    private static class Reflector_1_8 extends Reflector {
+        private Reflector_1_8() throws ClassNotFoundException {
+            String namespace = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+
+            entityStatusPacketClass = Class.forName("net.minecraft.server." + namespace + ".PacketPlayOutEntityStatus");
+            playerConnectionClass = Class.forName("net.minecraft.server." + namespace + ".PlayerConnection");
+            entityClass = Class.forName("net.minecraft.server." + namespace + ".Entity");
+            packetClass = Class.forName("net.minecraft.server." + namespace + ".Packet");
+            playerConnectionField = "playerConnection";
+        }
+    }
+
+    private static class Reflector_1_17 extends Reflector {
+        private Reflector_1_17() throws ClassNotFoundException {
+            super();
+            entityStatusPacketClass = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutEntityStatus");
+            playerConnectionClass = Class.forName("net.minecraft.server.network.PlayerConnection");
+            entityClass = Class.forName("net.minecraft.world.entity.Entity");
+            packetClass = Class.forName("net.minecraft.network.protocol.Packet");
+            playerConnectionField = "b";
         }
     }
 }
