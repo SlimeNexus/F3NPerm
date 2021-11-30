@@ -26,12 +26,16 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
         bypassPermissionChecking = new File(".bypass_permission_checking").exists();
 
         try {
-            reflector = new Reflector_1_17();
+            reflector = new Reflector_1_18();
         } catch (Exception e) {
             try {
-                reflector = new Reflector_1_8();
+                reflector = new Reflector_1_17();
             } catch (Exception e2) {
-                logger.log(Level.SEVERE, "Could not load plugin for this version... (Server version might be incompatible)", e);
+                try {
+                    reflector = new Reflector_1_8();
+                } catch (Exception e3) {
+                    logger.log(Level.SEVERE, "Could not load plugin for this version... (Server version might be incompatible)", e);
+                }
             }
         }
 
@@ -80,46 +84,116 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
     }
 
     private static abstract class Reflector {
-        private static final byte STATUS_BYTE = 28;
+        private final Class<?> entityClass;
+        private final Class<?> packetClass;
+        private final Class<?> packetPlayOutEntityStatusClass;
 
-        protected Class<?> entityStatusPacketClass;
-        protected Class<?> playerConnectionClass;
-        protected Class<?> entityClass;
-        protected Class<?> packetClass;
-        protected String playerConnectionField;
+        public Reflector() {
+            try {
+                this.entityClass = Class.forName(getEntityClassName());
+                this.packetClass = Class.forName(getPacketClassName());
+                this.packetPlayOutEntityStatusClass = Class.forName(getPacketPlayOutEntityStatusClassName());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         public void sendEntityStatus(Player p) {
             try {
-                Object entityPlayer = p.getClass().getDeclaredMethod("getHandle").invoke(p);
-                Object playerConnection = entityPlayer.getClass().getDeclaredField(playerConnectionField).get(entityPlayer);
-                Object packet = entityStatusPacketClass.getConstructor(entityClass, byte.class).newInstance(entityPlayer, STATUS_BYTE);
-                playerConnectionClass.getDeclaredMethod("sendPacket", packetClass).invoke(playerConnection, packet);
+                Object entityPlayer = p.getClass()
+                        .getDeclaredMethod(getGetHandleMethodName())
+                        .invoke(p);
+
+                Object playerConnection = entityPlayer.getClass()
+                        .getDeclaredField(getPlayerConnectionFieldName())
+                        .get(entityPlayer);
+
+                Object packet = packetPlayOutEntityStatusClass
+                        .getConstructor(entityClass, byte.class)
+                        .newInstance(entityPlayer, getStatusByte());
+
+                playerConnection.getClass()
+                        .getDeclaredMethod(getSendPacketMethodName(), packetClass)
+                        .invoke(playerConnection, packet);
             } catch (Throwable e) {
                 throw new RuntimeException("Error while sending entity status 28", e);
             }
         }
+
+        protected abstract byte getStatusByte();
+        protected abstract String getEntityClassName();
+        protected abstract String getPacketClassName();
+        protected abstract String getPacketPlayOutEntityStatusClassName();
+        protected abstract String getGetHandleMethodName();
+        protected abstract String getPlayerConnectionFieldName();
+        protected abstract String getSendPacketMethodName();
     }
 
     private static class Reflector_1_8 extends Reflector {
-        private Reflector_1_8() throws ClassNotFoundException {
-            String namespace = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        private final String namespace = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 
-            entityStatusPacketClass = Class.forName("net.minecraft.server." + namespace + ".PacketPlayOutEntityStatus");
-            playerConnectionClass = Class.forName("net.minecraft.server." + namespace + ".PlayerConnection");
-            entityClass = Class.forName("net.minecraft.server." + namespace + ".Entity");
-            packetClass = Class.forName("net.minecraft.server." + namespace + ".Packet");
-            playerConnectionField = "playerConnection";
+        @Override
+        protected byte getStatusByte() {
+            return 26;
+        }
+
+        @Override
+        protected String getEntityClassName() {
+            return "net.minecraft.server." + namespace + ".Entity";
+        }
+
+        @Override
+        protected String getPacketClassName() {
+            return "net.minecraft.server." + namespace + ".Packet";
+        }
+
+        @Override
+        protected String getPacketPlayOutEntityStatusClassName() {
+            return "net.minecraft.server." + namespace + ".PacketPlayOutEntityStatus";
+        }
+
+        @Override
+        protected String getGetHandleMethodName() {
+            return "getHandle";
+        }
+
+        @Override
+        protected String getPlayerConnectionFieldName() {
+            return "playerConnection";
+        }
+
+        @Override
+        protected String getSendPacketMethodName() {
+            return "sendPacket";
         }
     }
 
-    private static class Reflector_1_17 extends Reflector {
-        private Reflector_1_17() throws ClassNotFoundException {
-            super();
-            entityStatusPacketClass = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutEntityStatus");
-            playerConnectionClass = Class.forName("net.minecraft.server.network.PlayerConnection");
-            entityClass = Class.forName("net.minecraft.world.entity.Entity");
-            packetClass = Class.forName("net.minecraft.network.protocol.Packet");
-            playerConnectionField = "b";
+    private static class Reflector_1_17 extends Reflector_1_8 {
+        @Override
+        protected String getPacketPlayOutEntityStatusClassName() {
+            return "net.minecraft.network.protocol.game.PacketPlayOutEntityStatus";
+        }
+
+        @Override
+        protected String getEntityClassName() {
+            return "net.minecraft.world.entity.Entity";
+        }
+
+        @Override
+        protected String getPacketClassName() {
+            return "net.minecraft.network.protocol.Packet";
+        }
+
+        @Override
+        protected String getPlayerConnectionFieldName() {
+            return "b";
+        }
+    }
+
+    private static class Reflector_1_18 extends Reflector_1_17 {
+        @Override
+        protected String getSendPacketMethodName() {
+            return "a";
         }
     }
 }

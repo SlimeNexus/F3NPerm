@@ -4,11 +4,11 @@ plugins {
 }
 
 group 'de.redgames'
-version '2.6'
+version '2.7'
 
 java {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
 }
 
 repositories {
@@ -20,13 +20,14 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
+    testCompileOnly group: 'junit', name: 'junit', version: '4.12'
+    compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
 processResources {
+    duplicatesStrategy(DuplicatesStrategy.INCLUDE)
     from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: version]
     }
