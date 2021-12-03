@@ -1,5 +1,5 @@
 name: F3NPerm
-version: @version@
+version: 2.7.1
 main: de.redgames.f3nperm.F3NPermPlugin
 api-version: 1.13
 authors: [Rodney_Mc_Kay]
