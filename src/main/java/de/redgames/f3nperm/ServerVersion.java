@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public final class ServerVersion {
     public static final ServerVersion v_1_17 = new ServerVersion(1, 17, 0);
     public static final ServerVersion v_1_18 = new ServerVersion(1, 18, 0);
+    public static final ServerVersion v_1_18_2 = new ServerVersion(1, 18, 2);
 
     private static final Pattern PACKAGE_PATTERN = Pattern.compile("v(\\d+)_(\\d+)_R(\\d+)");
 

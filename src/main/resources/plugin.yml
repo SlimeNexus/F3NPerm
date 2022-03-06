@@ -1,6 +1,30 @@
+main: de.redgames.f3nperm.F3NPermPlugin
+api-version: 1.13 # Lowest possible api version for compatibility with 1.9+
+
 name: F3NPerm
 version: ${version}
-main: de.redgames.f3nperm.F3NPermPlugin
-api-version: 1.13
 authors: [Rodney_Mc_Kay]
 description: Allows to use Hotkey F3 + N with permissions
+
+softdepend:
+  - ProtocolLib
+  - LuckPerms
+
+commands:
+  f3nperm:
+    description: "Command for administrative features of F3NPerm"
+    permission: "f3nperm.admin"
+    usage: "Usage: /<command> <forceupdate|reload>"
+
+permissions:
+  f3nperm.admin:
+    description: "Grants access to administrative functions of F3NPerm including the /f3nperm command"
+    default: op
+  f3nperm.use:
+    description: "Allows people to use F3 + N, the gamemode switcher and various other client hotkeys"
+    default: op
+  f3nperm.*:
+    description: "Grants full access to F3NPerm"
+    children:
+      - f3nperm.admin
+      - f3nperm.use

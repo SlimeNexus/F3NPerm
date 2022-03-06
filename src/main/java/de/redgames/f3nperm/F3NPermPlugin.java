@@ -1,93 +1,161 @@
 package de.redgames.f3nperm;
 
-import org.bukkit.Bukkit;
+import de.redgames.f3nperm.hooks.Hook;
+import de.redgames.f3nperm.hooks.LuckPermsHook;
+import de.redgames.f3nperm.provider.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public final class F3NPermPlugin extends JavaPlugin implements Listener {
-    private Reflector reflector;
-    private Logger logger;
-    private boolean bypassPermissionChecking;
+    private final Hook[] hooks = new Hook[] {
+            new LuckPermsHook()
+    };
+
+    private Provider provider;
+    private ServerVersion serverVersion;
+    private Settings settings;
+    private List<Hook> registeredHooks;
 
     @Override
     public void onLoad() {
-        logger = getLogger();
+        serverVersion = ServerVersion.fromBukkitVersion();
 
-        bypassPermissionChecking = new File(".bypass_permission_checking").exists();
-
-        ServerVersion version = ServerVersion.fromBukkitVersion();
-
-        if (version == null) {
-            logger.severe("Could not read server version! (Too new or too old?)");
-            return;
+        if (serverVersion == null) {
+            getLogger().warning("Could not read server version, proceed with caution!");
+        } else {
+            getLogger().info("Server version " + serverVersion + " detected");
         }
 
-        logger.info("Trying to load plugin for version " + version + "!");
+        loadSettings();
 
-        try {
-            if (version.isLowerThan(ServerVersion.v_1_17)) {
-                this.reflector = new Reflector_1_8();
-            } else if (version.isLowerThan(ServerVersion.v_1_18)) {
-                this.reflector = new Reflector_1_17();
-            } else {
-                this.reflector = new Reflector_1_18();
-            }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Could not load plugin no this version! " +
-                    "(Is this server version incompatible?)", e);
-        }
+        provider = findProvider();
 
-        logger.info("Plugin loaded!");
+        getLogger().info("Provider " + provider.getClass().getSimpleName() + " loaded!");
+
+        getLogger().info("Plugin loaded!");
     }
 
     @Override
     public void onEnable() {
-        if (reflector != null) {
-            Bukkit.getPluginManager().registerEvents(this, this);
-            logger.info("Plugin enabled!");
-        } else {
-            logger.severe("Plugin not enabled! No compatible version found while the plugin loaded!");
+        F3NPermCommand f3nPermCommand = new F3NPermCommand(this);
+        getCommand("f3nperm").setExecutor(f3nPermCommand);
+        getCommand("f3nperm").setTabCompleter(f3nPermCommand);
+
+        getServer().getPluginManager().registerEvents(new F3NPermListener(this), this);
+
+        try {
+            provider.register(this);
+        } catch (ProviderException e) {
+            getLogger().log(Level.SEVERE, "Could not register provider " + provider.getClass().getSimpleName() + "!", e);
         }
+
+        loadHooks();
+
+        getLogger().info("Plugin enabled!");
     }
 
     @Override
     public void onDisable() {
-        logger.info("Plugin disabled!");
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        checkF3NPermUpdate(event.getPlayer());
-    }
-
-    @EventHandler
-    public void onWorldChange(PlayerChangedWorldEvent event) {
-        checkF3NPermUpdate(event.getPlayer());
-    }
-
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent event) {
-        checkF3NPermUpdate(event.getPlayer());
-    }
-
-    private void checkF3NPermUpdate(Player player) {
-        if (bypassPermissionChecking || player.hasPermission("F3NPerm.use")) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    reflector.sendEntityStatus(player);
-                }
-            }.runTaskLater(this, 10);
+        if (registeredHooks != null) {
+            for (Hook hook : registeredHooks) {
+                hook.unregister(this);
+            }
         }
+
+        try {
+            provider.unregister(this);
+        } catch (ProviderException e) {
+            getLogger().log(Level.SEVERE, "Could not unregister provider " + provider.getClass().getSimpleName() + "!", e);
+        }
+
+        getLogger().info("Plugin disabled!");
+    }
+
+    public void reloadPlugin() {
+        for (Hook hook : registeredHooks) {
+            hook.unregister(this);
+        }
+
+        loadSettings();
+        loadHooks();
+
+        for (Player player : getServer().getOnlinePlayers()) {
+            provider.update(player);
+        }
+    }
+
+    private void loadSettings() {
+        try {
+            settings = Settings.loadSettings(this, getDataFolder().toPath());
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Error loading configuration!", e);
+            throw new RuntimeException();
+        }
+    }
+
+    private void loadHooks() {
+        registeredHooks = new ArrayList<>();
+
+        for (Hook hook : hooks) {
+            if (getSettings().getHooks().contains(hook.getName())) {
+                hook.register(this);
+                registeredHooks.add(hook);
+            }
+        }
+    }
+
+    private Provider findProvider() {
+        if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
+            if (settings.isUseProtocolLib()) {
+                return new ProtocolLibProvider();
+            }
+        }
+
+        if (serverVersion == null) {
+            throw new ProviderException("Server version cannot be detected and ProtocolLib is disabled!");
+        }
+
+        if (serverVersion.isLowerThan(ServerVersion.v_1_17)) {
+            return new ReflectionProvider_1_9();
+        }
+
+        if (serverVersion.isLowerThan(ServerVersion.v_1_18)) {
+            return new ReflectionProvider_1_17();
+        }
+
+        if (serverVersion.isLowerThan(ServerVersion.v_1_18_2)) {
+            return new ReflectionProvider_1_18();
+        }
+
+        return new ReflectionProvider_1_18_2();
+    }
+
+    public OpPermissionLevel getF3NPermPermissionLevel(Player player) {
+        if (!settings.isEnablePermissionCheck() ||
+                player.hasPermission("f3nperm.use") ||
+                player.hasPermission("F3NPerm.use") ||
+                player.isOp()) {
+            return settings.getOpPermissionLevel();
+        }
+
+        return OpPermissionLevel.NO_PERMISSIONS;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public ServerVersion getServerVersion() {
+        return serverVersion;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 }
