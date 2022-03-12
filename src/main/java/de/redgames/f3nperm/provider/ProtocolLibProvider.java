@@ -28,6 +28,11 @@ public class ProtocolLibProvider implements Provider {
                     return;
                 }
 
+                if (event.isPlayerTemporary()) {
+                    event.setCancelled(true);
+                    return;
+                }
+
                 PacketContainer packet = event.getPacket();
                 int playerId = packet.getIntegers().read(0);
 
