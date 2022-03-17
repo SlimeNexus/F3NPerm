@@ -29,7 +29,6 @@ public class ProtocolLibProvider implements Provider {
                 }
 
                 if (event.isPlayerTemporary()) {
-                    event.setCancelled(true);
                     return;
                 }
 
