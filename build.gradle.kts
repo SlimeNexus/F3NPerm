@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.redgames"
-version = "3.0.1"
+version = "3.1"
 
 val targetJavaVersion = 8
 
@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
     compileOnly("org.bukkit:bukkit:1.9.4-R0.1-SNAPSHOT")
-    compileOnly("io.netty:netty-all:4.1.74.Final")
+    compileOnly("io.netty:netty-all:4.1.77.Final")
 
     compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
     compileOnly("net.luckperms:api:5.4")
