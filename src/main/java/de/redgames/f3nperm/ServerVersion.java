@@ -9,6 +9,7 @@ public final class ServerVersion {
     public static final ServerVersion v_1_17 = new ServerVersion(1, 17, 0);
     public static final ServerVersion v_1_18 = new ServerVersion(1, 18, 0);
     public static final ServerVersion v_1_18_2 = new ServerVersion(1, 18, 2);
+    public static final ServerVersion v_1_19 = new ServerVersion(1, 19, 1);
 
     private static final Pattern PACKAGE_PATTERN = Pattern.compile("v(\\d+)_(\\d+)_R(\\d+)");
 
@@ -45,7 +46,11 @@ public final class ServerVersion {
     }
 
     public boolean isLowerThan(ServerVersion version) {
-        return getMajor() < version.getMajor() || getMinor() < version.getMinor() || getPatch() < version.getPatch();
+        if (getMajor() < version.getMajor()) return true;
+        if (getMajor() > version.getMajor()) return false;
+        if (getMinor() < version.getMinor()) return true;
+        if (getMinor() > version.getMinor()) return false;
+        return getPatch() < version.getPatch();
     }
 
     public int getMajor() {
