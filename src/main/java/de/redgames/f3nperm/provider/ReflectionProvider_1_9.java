@@ -35,6 +35,12 @@ public class ReflectionProvider_1_9 extends NettyProvider {
                 return;
             }
 
+            OpPermissionLevel currentLevel = getStatusPacketStatus(packet);
+
+            if (currentLevel == null) {
+                return;
+            }
+
             OpPermissionLevel level = getPlugin().getF3NPermPermissionLevel(player);
             setStatusPacketStatus(packet, level);
         } catch (ReflectionException e) {
@@ -73,6 +79,10 @@ public class ReflectionProvider_1_9 extends NettyProvider {
 
     public int getStatusPacketEntity(Object packet) throws ReflectionException {
         return (Integer) Reflections.getPrivate(packet, "a");
+    }
+
+    public OpPermissionLevel getStatusPacketStatus(Object packet) throws ReflectionException {
+        return OpPermissionLevel.fromStatusByte(getPlugin().getServerVersion(), (Byte) Reflections.getPrivate(packet, "b"));
     }
 
     public void setStatusPacketStatus(Object packet, OpPermissionLevel level) throws ReflectionException {
