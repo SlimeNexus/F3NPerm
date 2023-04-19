@@ -137,7 +137,7 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
             return new ReflectionProvider_v1_18_R2();
         }
 
-        if (serverVersion.isLowerThan(ServerVersion.v1_19_R3)) {
+        if (nmsVersion.isLowerThan(NMSVersion.v1_19_R3)) {
             return new ReflectionProvider_v1_19_R1();
         }
 
@@ -157,10 +157,6 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
 
     public Provider getProvider() {
         return provider;
-    }
-
-    public ServerVersion getServerVersion() {
-        return serverVersion;
     }
 
     public Settings getSettings() {
