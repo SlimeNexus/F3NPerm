@@ -6,7 +6,7 @@ import de.redgames.f3nperm.reflection.Reflections;
 import io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 
-public class ReflectionProvider_1_9 extends NettyProvider {
+public class ReflectionProvider_v1_9_R1 extends NettyProvider {
     @Override
     public void sendPacket(Player player) {
         OpPermissionLevel level = getPlugin().getF3NPermPermissionLevel(player);
@@ -15,7 +15,7 @@ public class ReflectionProvider_1_9 extends NettyProvider {
             Object entityPlayer = getEntityPlayer(player);
             Object playerConnection = getPlayerConnection(entityPlayer);
 
-            Object packet = makeStatusPacket(entityPlayer, level.toStatusByte(getPlugin().getServerVersion()));
+            Object packet = makeStatusPacket(entityPlayer, level.toStatusByte());
             sendPacket(playerConnection, packet);
         } catch (ReflectionException e) {
             throw new ProviderException("Could not send packet!", e);
@@ -82,11 +82,11 @@ public class ReflectionProvider_1_9 extends NettyProvider {
     }
 
     public OpPermissionLevel getStatusPacketStatus(Object packet) throws ReflectionException {
-        return OpPermissionLevel.fromStatusByte(getPlugin().getServerVersion(), (Byte) Reflections.getPrivate(packet, "b"));
+        return OpPermissionLevel.fromStatusByte((Byte) Reflections.getPrivate(packet, "b"));
     }
 
     public void setStatusPacketStatus(Object packet, OpPermissionLevel level) throws ReflectionException {
-        Reflections.setPrivate(packet, "b", level.toStatusByte(getPlugin().getServerVersion()));
+        Reflections.setPrivate(packet, "b", level.toStatusByte());
     }
 
     public Object makeStatusPacket(Object entityPlayer, byte status) throws ReflectionException {

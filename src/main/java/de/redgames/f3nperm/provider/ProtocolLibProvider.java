@@ -42,13 +42,13 @@ public class ProtocolLibProvider implements Provider {
                 byte currentStatus = packet.getBytes().read(0);
                 F3NPermPlugin plugin = ProtocolLibProvider.this.plugin;
 
-                if (OpPermissionLevel.fromStatusByte(plugin.getServerVersion(), currentStatus) == null) {
+                if (OpPermissionLevel.fromStatusByte(currentStatus) == null) {
                     return;
                 }
 
                 OpPermissionLevel targetLevel = plugin.getF3NPermPermissionLevel(event.getPlayer());
 
-                packet.getBytes().write(0, targetLevel.toStatusByte(plugin.getServerVersion()));
+                packet.getBytes().write(0, targetLevel.toStatusByte());
             }
         });
     }
@@ -64,7 +64,7 @@ public class ProtocolLibProvider implements Provider {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
 
         packet.getIntegers().write(0, player.getEntityId());
-        packet.getBytes().write(0, level.toStatusByte(plugin.getServerVersion()));
+        packet.getBytes().write(0, level.toStatusByte());
 
         try {
             manager.sendServerPacket(player, packet, false);
