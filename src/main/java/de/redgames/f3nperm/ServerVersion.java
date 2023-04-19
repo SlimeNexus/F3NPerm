@@ -10,7 +10,7 @@ public final class ServerVersion {
     public static final ServerVersion v_1_18 = new ServerVersion(1, 18, 0);
     public static final ServerVersion v_1_18_2 = new ServerVersion(1, 18, 2);
     public static final ServerVersion v_1_19 = new ServerVersion(1, 19, 1);
-    public static final ServerVersion v_1_19_4 = new ServerVersion(1, 19, 4);
+    public static final ServerVersion v_1_19_3 = new ServerVersion(1, 19, 3);
 
     private static final Pattern PACKAGE_PATTERN = Pattern.compile("v(\\d+)_(\\d+)_R(\\d+)");
 
