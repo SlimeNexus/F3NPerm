@@ -52,7 +52,7 @@ public final class F3NPermCommand implements CommandExecutor, TabCompleter {
             }
 
             plugin.getProvider().update(target);
-            sender.sendMessage(ChatColor.GREEN + "Updated player " + args[1] + "");
+            sender.sendMessage(ChatColor.GREEN + "Updated player " + args[1]);
             return true;
         }
 
