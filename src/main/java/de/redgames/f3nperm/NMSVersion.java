@@ -10,6 +10,7 @@ public final class NMSVersion {
     public static final NMSVersion v1_18_R1 = new NMSVersion(1, 18, 1);
     public static final NMSVersion v1_18_R2 = new NMSVersion(1, 18, 2);
     public static final NMSVersion v1_19_R1 = new NMSVersion(1, 19, 1);
+    public static final NMSVersion v1_19_R3 = new NMSVersion(1, 19, 3);
 
     private static final Pattern PACKAGE_PATTERN = Pattern.compile("v(\\d+)_(\\d+)_R(\\d+)");
 
