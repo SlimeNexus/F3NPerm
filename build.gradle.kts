@@ -11,23 +11,21 @@ version = "3.1.1"
 val targetJavaVersion = 8
 
 // Dependencies
-
 repositories {
     mavenCentral()
-
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
-    compileOnly("org.bukkit:bukkit:1.9.4-R0.1-SNAPSHOT")
-    compileOnly("io.netty:netty-all:4.1.79.Final")
+    compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT")
+    compileOnly("io.netty:netty-all:4.1.86.Final")
 
     compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
     compileOnly("net.luckperms:api:5.4")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 // Set java version
