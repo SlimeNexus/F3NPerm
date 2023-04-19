@@ -122,22 +122,22 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
         }
 
         if (nmsVersion.isLowerThan(NMSVersion.v1_17_R1)) {
-            return new ReflectionProvider_1_9();
+            return new ReflectionProvider_v1_9_R1();
         }
 
         if (nmsVersion.isLowerThan(NMSVersion.v1_18_R1)) {
-            return new ReflectionProvider_1_17();
+            return new ReflectionProvider_v1_17_R1();
         }
 
         if (nmsVersion.isLowerThan(NMSVersion.v1_18_R2)) {
-            return new ReflectionProvider_1_18();
+            return new ReflectionProvider_v1_18_R1();
         }
 
         if (nmsVersion.isLowerThan(NMSVersion.v1_19_R1)) {
-            return new ReflectionProvider_1_18_2();
+            return new ReflectionProvider_v1_18_R2();
         }
 
-        return new ReflectionProvider_1_19();
+        return new ReflectionProvider_v1_19_R1();
     }
 
     public OpPermissionLevel getF3NPermPermissionLevel(Player player) {
