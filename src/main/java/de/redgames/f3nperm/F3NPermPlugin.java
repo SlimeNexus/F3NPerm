@@ -18,18 +18,18 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
     };
 
     private Provider provider;
-    private ServerVersion serverVersion;
+    private NMSVersion nmsVersion;
     private Settings settings;
     private List<Hook> registeredHooks;
 
     @Override
     public void onLoad() {
-        serverVersion = ServerVersion.fromBukkitVersion();
+        nmsVersion = NMSVersion.fromBukkitVersion();
 
-        if (serverVersion == null) {
+        if (nmsVersion == null) {
             getLogger().warning("Could not read server version, proceed with caution!");
         } else {
-            getLogger().info("Server version " + serverVersion + " detected");
+            getLogger().info("Server version " + nmsVersion + " detected");
         }
 
         loadSettings();
@@ -117,23 +117,23 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
             }
         }
 
-        if (serverVersion == null) {
+        if (nmsVersion == null) {
             throw new ProviderException("Server version cannot be detected and ProtocolLib is disabled!");
         }
 
-        if (serverVersion.isLowerThan(ServerVersion.v_1_17)) {
+        if (nmsVersion.isLowerThan(NMSVersion.v1_17_R1)) {
             return new ReflectionProvider_1_9();
         }
 
-        if (serverVersion.isLowerThan(ServerVersion.v_1_18)) {
+        if (nmsVersion.isLowerThan(NMSVersion.v1_18_R1)) {
             return new ReflectionProvider_1_17();
         }
 
-        if (serverVersion.isLowerThan(ServerVersion.v_1_18_2)) {
+        if (nmsVersion.isLowerThan(NMSVersion.v1_18_R2)) {
             return new ReflectionProvider_1_18();
         }
 
-        if (serverVersion.isLowerThan(ServerVersion.v_1_19_1)) {
+        if (nmsVersion.isLowerThan(NMSVersion.v1_19_R1)) {
             return new ReflectionProvider_1_18_2();
         }
 
