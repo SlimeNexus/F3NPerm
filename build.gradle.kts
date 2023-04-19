@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.redgames"
-version = "3.1.1"
+version = "3.2"
 
 val targetJavaVersion = 8
 
