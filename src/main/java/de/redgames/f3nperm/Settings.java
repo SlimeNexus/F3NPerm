@@ -27,7 +27,7 @@ public class Settings {
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile.toFile());
 
-        return new Settings(config, configFile);
+        return new Settings(config);
     }
 
     private final boolean useProtocolLib;
@@ -35,7 +35,7 @@ public class Settings {
     private final boolean enablePermissionCheck;
     private final Set<String> hooks;
 
-    private Settings(FileConfiguration config, Path configFile) throws IOException {
+    private Settings(FileConfiguration config) throws IOException {
         // use-protocol-lib
         useProtocolLib = config.getBoolean("use-protocol-lib", true);
 

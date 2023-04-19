@@ -3,7 +3,7 @@ package de.redgames.f3nperm.provider;
 import de.redgames.f3nperm.reflection.ReflectionException;
 import de.redgames.f3nperm.reflection.Reflections;
 
-public class ReflectionProvider_1_17 extends ReflectionProvider_1_9 {
+public class ReflectionProvider_v1_17_R1 extends ReflectionProvider_v1_9_R1 {
     @Override
     public Object getPlayerConnection(Object entityPlayer) throws ReflectionException {
         return Reflections.getPrivate(entityPlayer, "b");

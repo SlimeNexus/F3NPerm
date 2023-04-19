@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 // Deprecation is the Server#getPlayerExact(String). It seems like that method was accidentally
 // deprecated in 1.8 and the deprecation was removed again in newer versions.
-@SuppressWarnings("deprecated")
+@SuppressWarnings("deprecation")
 public final class F3NPermCommand implements CommandExecutor, TabCompleter {
     private final F3NPermPlugin plugin;
 
@@ -52,7 +52,7 @@ public final class F3NPermCommand implements CommandExecutor, TabCompleter {
             }
 
             plugin.getProvider().update(target);
-            sender.sendMessage(ChatColor.GREEN + "Updated player " + args[1] + "");
+            sender.sendMessage(ChatColor.GREEN + "Updated player " + args[1]);
             return true;
         }
 
