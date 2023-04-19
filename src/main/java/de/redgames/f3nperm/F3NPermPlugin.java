@@ -155,10 +155,6 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
         return provider;
     }
 
-    public ServerVersion getServerVersion() {
-        return serverVersion;
-    }
-
     public Settings getSettings() {
         return settings;
     }

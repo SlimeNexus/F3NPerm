@@ -15,7 +15,7 @@ public class ReflectionProvider_1_9 extends NettyProvider {
             Object entityPlayer = getEntityPlayer(player);
             Object playerConnection = getPlayerConnection(entityPlayer);
 
-            Object packet = makeStatusPacket(entityPlayer, level.toStatusByte(getPlugin().getServerVersion()));
+            Object packet = makeStatusPacket(entityPlayer, level.toStatusByte());
             sendPacket(playerConnection, packet);
         } catch (ReflectionException e) {
             throw new ProviderException("Could not send packet!", e);
@@ -82,11 +82,11 @@ public class ReflectionProvider_1_9 extends NettyProvider {
     }
 
     public OpPermissionLevel getStatusPacketStatus(Object packet) throws ReflectionException {
-        return OpPermissionLevel.fromStatusByte(getPlugin().getServerVersion(), (Byte) Reflections.getPrivate(packet, "b"));
+        return OpPermissionLevel.fromStatusByte((Byte) Reflections.getPrivate(packet, "b"));
     }
 
     public void setStatusPacketStatus(Object packet, OpPermissionLevel level) throws ReflectionException {
-        Reflections.setPrivate(packet, "b", level.toStatusByte(getPlugin().getServerVersion()));
+        Reflections.setPrivate(packet, "b", level.toStatusByte());
     }
 
     public Object makeStatusPacket(Object entityPlayer, byte status) throws ReflectionException {
