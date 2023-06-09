@@ -141,7 +141,11 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
             return new ReflectionProvider_v1_19_R1();
         }
 
-        return new ReflectionProvider_v1_19_R3();
+        if (nmsVersion.isLowerThan(NMSVersion.v1_20_R1)) {
+            return new ReflectionProvider_v1_19_R3();
+        }
+
+        return new ReflectionProvider_v1_20_R1();
     }
 
     public OpPermissionLevel getF3NPermPermissionLevel(Player player) {
