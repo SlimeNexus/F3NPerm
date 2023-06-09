@@ -10,8 +10,6 @@ import de.redgames.f3nperm.F3NPermPlugin;
 import de.redgames.f3nperm.OpPermissionLevel;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class ProtocolLibProvider implements Provider {
     private F3NPermPlugin plugin;
     private ProtocolManager manager;
@@ -67,8 +65,11 @@ public class ProtocolLibProvider implements Provider {
         packet.getBytes().write(0, level.toStatusByte());
 
         try {
+            // This method used to be able to throw InvocationTargetException before
+            // ProtocolLib 5.0. We need to catch that here, in case we're on a lower
+            // version.
             manager.sendServerPacket(player, packet, false);
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             throw new ProviderException("Could not send status packet!", e);
         }
     }
