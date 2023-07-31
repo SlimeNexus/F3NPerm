@@ -37,7 +37,7 @@ public class Settings {
 
     private Settings(FileConfiguration config) throws IOException {
         // use-protocol-lib
-        useProtocolLib = config.getBoolean("use-protocol-lib", true);
+        useProtocolLib = config.getBoolean("use-protocollib", true);
 
         // op-permission-level
         int opPermissionLevelInt = config.getInt("op-permission-level", OpPermissionLevel.ADMIN_COMMANDS.getLevel());
