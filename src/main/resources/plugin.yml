@@ -1,4 +1,4 @@
-main: de.redgames.f3nperm.F3NPermPlugin
+main: nexus.slime.f3nperm.F3NPermPlugin
 api-version: 1.13 # Lowest possible api version for compatibility with 1.9+
 
 name: F3NPerm
