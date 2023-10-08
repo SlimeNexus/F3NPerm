@@ -1,4 +1,4 @@
-package de.redgames.f3nperm.reflection;
+package nexus.slime.f3nperm.reflection;
 
 public class ReflectionException extends Exception {
     public ReflectionException(String message) {

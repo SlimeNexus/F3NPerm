@@ -1,4 +1,4 @@
-package de.redgames.f3nperm;
+package nexus.slime.f3nperm;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

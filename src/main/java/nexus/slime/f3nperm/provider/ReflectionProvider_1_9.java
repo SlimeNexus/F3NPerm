@@ -1,8 +1,8 @@
-package de.redgames.f3nperm.provider;
+package nexus.slime.f3nperm.provider;
 
-import de.redgames.f3nperm.OpPermissionLevel;
-import de.redgames.f3nperm.reflection.ReflectionException;
-import de.redgames.f3nperm.reflection.Reflections;
+import nexus.slime.f3nperm.OpPermissionLevel;
+import nexus.slime.f3nperm.reflection.ReflectionException;
+import nexus.slime.f3nperm.reflection.Reflections;
 import io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 

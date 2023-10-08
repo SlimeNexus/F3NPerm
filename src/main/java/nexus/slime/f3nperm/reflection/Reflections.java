@@ -1,4 +1,4 @@
-package de.redgames.f3nperm.reflection;
+package nexus.slime.f3nperm.reflection;
 
 import org.bukkit.Bukkit;
 

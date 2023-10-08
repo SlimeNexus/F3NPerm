@@ -1,4 +1,4 @@
-package de.redgames.f3nperm;
+package nexus.slime.f3nperm;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

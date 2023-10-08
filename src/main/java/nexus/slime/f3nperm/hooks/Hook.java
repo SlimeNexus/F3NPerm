@@ -1,6 +1,6 @@
-package de.redgames.f3nperm.hooks;
+package nexus.slime.f3nperm.hooks;
 
-import de.redgames.f3nperm.F3NPermPlugin;
+import nexus.slime.f3nperm.F3NPermPlugin;
 
 public interface Hook {
     String getName();

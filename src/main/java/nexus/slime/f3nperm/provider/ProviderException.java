@@ -1,4 +1,4 @@
-package de.redgames.f3nperm.provider;
+package nexus.slime.f3nperm.provider;
 
 public class ProviderException extends RuntimeException {
     public ProviderException(String message) {

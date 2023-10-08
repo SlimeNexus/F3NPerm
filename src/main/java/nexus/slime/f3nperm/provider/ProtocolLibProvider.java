@@ -1,4 +1,4 @@
-package de.redgames.f3nperm.provider;
+package nexus.slime.f3nperm.provider;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -6,8 +6,8 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import de.redgames.f3nperm.F3NPermPlugin;
-import de.redgames.f3nperm.OpPermissionLevel;
+import nexus.slime.f3nperm.F3NPermPlugin;
+import nexus.slime.f3nperm.OpPermissionLevel;
 import org.bukkit.entity.Player;
 
 public class ProtocolLibProvider implements Provider {

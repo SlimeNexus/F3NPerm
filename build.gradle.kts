@@ -5,7 +5,7 @@ plugins {
     idea
 }
 
-group = "de.redgames"
+group = "nexus.slime"
 version = "3.3.1"
 
 val targetJavaVersion = 8

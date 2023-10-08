@@ -1,6 +1,6 @@
-package de.redgames.f3nperm.provider;
+package nexus.slime.f3nperm.provider;
 
-import de.redgames.f3nperm.F3NPermPlugin;
+import nexus.slime.f3nperm.F3NPermPlugin;
 import org.bukkit.entity.Player;
 
 public interface Provider {

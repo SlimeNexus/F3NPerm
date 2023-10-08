@@ -1,8 +1,8 @@
-package de.redgames.f3nperm;
+package nexus.slime.f3nperm;
 
-import de.redgames.f3nperm.hooks.Hook;
-import de.redgames.f3nperm.hooks.LuckPermsHook;
-import de.redgames.f3nperm.provider.*;
+import nexus.slime.f3nperm.hooks.Hook;
+import nexus.slime.f3nperm.hooks.LuckPermsHook;
+import nexus.slime.f3nperm.provider.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

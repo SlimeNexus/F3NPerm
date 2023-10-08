@@ -1,4 +1,4 @@
-package de.redgames.f3nperm;
+package nexus.slime.f3nperm;
 
 public enum OpPermissionLevel {
     NO_PERMISSIONS(0),

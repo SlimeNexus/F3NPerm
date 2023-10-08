@@ -1,7 +1,7 @@
-package de.redgames.f3nperm.provider;
+package nexus.slime.f3nperm.provider;
 
-import de.redgames.f3nperm.reflection.ReflectionException;
-import de.redgames.f3nperm.reflection.Reflections;
+import nexus.slime.f3nperm.reflection.ReflectionException;
+import nexus.slime.f3nperm.reflection.Reflections;
 
 public class ReflectionProvider_1_19_4 extends ReflectionProvider_1_19 {
     @Override
