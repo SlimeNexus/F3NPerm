@@ -6,7 +6,7 @@ import nexus.slime.f3nperm.reflection.Reflections;
 public class ReflectionProvider_1_20_2 extends ReflectionProvider_1_20 {
     @Override
     public Object getNetworkManager(Object playerConnection) throws ReflectionException {
-        return Reflections.getPrivate(playerConnection, "c");
+        return Reflections.get(playerConnection, "c");
     }
 
     @Override
