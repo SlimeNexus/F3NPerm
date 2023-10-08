@@ -3,6 +3,7 @@ package de.redgames.f3nperm;
 import de.redgames.f3nperm.hooks.Hook;
 import de.redgames.f3nperm.hooks.LuckPermsHook;
 import de.redgames.f3nperm.provider.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,23 +19,23 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
     };
 
     private Provider provider;
-    private NMSVersion nmsVersion;
     private Settings settings;
     private List<Hook> registeredHooks;
 
     @Override
     public void onLoad() {
-        nmsVersion = NMSVersion.fromBukkitVersion();
+        BukkitVersion bukkitVersion = BukkitVersion.fromBukkitVersion();
 
-        if (nmsVersion == null) {
-            getLogger().warning("Could not read server version, proceed with caution!");
+        if (bukkitVersion == null) {
+            String version = Bukkit.getServer().getBukkitVersion();
+            getLogger().warning("Could not recognize server version, proceed with caution! (Bukkit version: " + version + ")");
         } else {
-            getLogger().info("Server version " + nmsVersion + " detected");
+            getLogger().info("Server version " + bukkitVersion + " detected");
         }
 
         loadSettings();
 
-        provider = findProvider();
+        provider = findProvider(bukkitVersion);
 
         getLogger().info("Provider " + provider.getClass().getSimpleName() + " loaded!");
 
@@ -110,46 +111,43 @@ public final class F3NPermPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    private Provider findProvider() {
+    private Provider findProvider(BukkitVersion bukkitVersion) {
         if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
             if (settings.isUseProtocolLib()) {
                 return new ProtocolLibProvider();
             }
         }
 
-        if (nmsVersion == null) {
-            throw new ProviderException("Server version cannot be detected and ProtocolLib is disabled!");
+        // Just use the latest provider when we can't find a suitable one;
+        if (bukkitVersion == null || bukkitVersion.isGreaterOrEqualTo(BukkitVersion.V1_20_2)) {
+            return new ReflectionProvider_1_20_2();
         }
 
-        if (nmsVersion.isLowerThan(NMSVersion.v1_17_R1)) {
-            return new ReflectionProvider_v1_9_R1();
+        if (bukkitVersion.isGreaterOrEqualTo(BukkitVersion.V1_20)) {
+            return new ReflectionProvider_1_20();
         }
 
-        if (nmsVersion.isLowerThan(NMSVersion.v1_18_R1)) {
-            return new ReflectionProvider_v1_17_R1();
+        if (bukkitVersion.isGreaterOrEqualTo(BukkitVersion.V1_19_4)) {
+            return new ReflectionProvider_1_19_4();
         }
 
-        if (nmsVersion.isLowerThan(NMSVersion.v1_18_R2)) {
-            return new ReflectionProvider_v1_18_R1();
+        if (bukkitVersion.isGreaterOrEqualTo(BukkitVersion.V1_19)) {
+            return new ReflectionProvider_1_19();
         }
 
-        if (nmsVersion.isLowerThan(NMSVersion.v1_19_R1)) {
-            return new ReflectionProvider_v1_18_R2();
+        if (bukkitVersion.isGreaterOrEqualTo(BukkitVersion.V1_18_2)) {
+            return new ReflectionProvider_1_18_2();
         }
 
-        if (nmsVersion.isLowerThan(NMSVersion.v1_19_R3)) {
-            return new ReflectionProvider_v1_19_R1();
+        if (bukkitVersion.isGreaterOrEqualTo(BukkitVersion.V1_18)) {
+            return new ReflectionProvider_1_18();
         }
 
-        if (nmsVersion.isLowerThan(NMSVersion.v1_20_R1)) {
-            return new ReflectionProvider_v1_19_R3();
+        if (bukkitVersion.isGreaterOrEqualTo(BukkitVersion.V1_17)) {
+            return new ReflectionProvider_1_17();
         }
 
-        if (nmsVersion.isLowerThan(NMSVersion.v1_20_R2)) {
-            return new ReflectionProvider_v1_20_R1();
-        }
-
-        return new ReflectionProvider_v1_20_R2();
+        return new ReflectionProvider_1_9();
     }
 
     public OpPermissionLevel getF3NPermPermissionLevel(Player player) {

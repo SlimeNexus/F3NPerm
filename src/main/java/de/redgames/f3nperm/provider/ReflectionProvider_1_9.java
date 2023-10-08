@@ -6,7 +6,7 @@ import de.redgames.f3nperm.reflection.Reflections;
 import io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 
-public class ReflectionProvider_v1_9_R1 extends NettyProvider {
+public class ReflectionProvider_1_9 extends NettyProvider {
     @Override
     public void sendPacket(Player player) {
         OpPermissionLevel level = getPlugin().getF3NPermPermissionLevel(player);
