@@ -15,14 +15,12 @@ public final class Reflections {
     // Prevent instantiation
     private Reflections() {}
 
-    private static String versionPackageName;
+    private static final String bukkitPackage;
+    private static final String nmsPackage;
 
-    private static String getVersionPackageName() {
-        if (versionPackageName == null) {
-            versionPackageName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        }
-
-        return versionPackageName;
+    static {
+        bukkitPackage = Bukkit.getServer().getClass().getPackage().getName();
+        nmsPackage = bukkitPackage.replace("org.bukkit.craftbukkit", "net.minecraft.server");
     }
 
     // -------------
@@ -47,10 +45,9 @@ public final class Reflections {
             return primitiveClass;
         }
 
-        String version = getVersionPackageName();
         String lookup = className
-                .replace("{nms}", "net.minecraft.server." + version + ".")
-                .replace("{obc}", "org.bukkit.craftbukkit." + version + ".");
+                .replace("{obc}", bukkitPackage + ".")
+                .replace("{nms}", nmsPackage + ".");
 
         try {
             return Class.forName(lookup);
