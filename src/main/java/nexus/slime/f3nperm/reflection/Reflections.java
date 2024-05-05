@@ -194,6 +194,16 @@ public final class Reflections {
         }
     }
 
+    public static Object getPrivate(Class<?> clazz, Object target, String name) throws ReflectionException {
+        try {
+            Field field = clazz.getDeclaredField(name);
+            field.setAccessible(true);
+            return field.get(target);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new ReflectionException("Could not access field " + name + " on " + clazz.getCanonicalName(), e);
+        }
+    }
+
     public static Object getPrivate(Object target, String name) throws ReflectionException {
         Class<?> clazz = target.getClass();
 

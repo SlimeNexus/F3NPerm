@@ -44,7 +44,11 @@ public enum BukkitVersion {
     V1_19_4(38, "1.19.4-R0.1-SNAPSHOT"),
     V1_20(39, "1.20-R0.1-SNAPSHOT"),
     V1_20_1(40, "1.20.1-R0.1-SNAPSHOT"),
-    V1_20_2(41, "1.20.2-R0.1-SNAPSHOT");
+    V1_20_2(41, "1.20.2-R0.1-SNAPSHOT"),
+    V1_20_3(42, "1.20.3-R0.1-SNAPSHOT"),
+    V1_20_4(43, "1.20.4-R0.1-SNAPSHOT"),
+    V1_20_5(44, "1.20.5-R0.1-SNAPSHOT"),
+    V1_20_6(45, "1.20.6-R0.1-SNAPSHOT");
 
     public static BukkitVersion fromBukkitVersion() {
         String bukkitVersion = Bukkit.getServer().getBukkitVersion();
