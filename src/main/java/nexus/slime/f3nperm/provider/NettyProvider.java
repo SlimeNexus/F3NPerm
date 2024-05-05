@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public abstract class NettyProvider implements Provider, Listener {
     private final Map<Player, F3NPermChannelHandler> playerHandlers;
@@ -103,7 +104,12 @@ public abstract class NettyProvider implements Provider, Listener {
 
         @Override
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-            adjustPacket(player, msg);
+            try {
+                adjustPacket(player, msg);
+            } catch (Exception e) {
+                getPlugin().getLogger().log(Level.SEVERE, "Could not adjust packet!", e);
+            }
+
             super.write(ctx, msg, promise);
         }
     }
