@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "nexus.slime"
-version = "3.5"
+version = "3.6"
 
 val targetJavaVersion = 8
 
@@ -19,13 +19,13 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT")
-    compileOnly("io.netty:netty-all:4.1.90.Final")
+    compileOnly("io.netty:netty-all:4.1.111.Final")
 
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
     compileOnly("net.luckperms:api:5.4")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.3")
 }
 
 // Set java version
@@ -44,7 +44,7 @@ java {
 }
 
 tasks.withType(JavaCompile::class) {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
+    if (targetJavaVersion >= 17 || JavaVersion.current().isJava10Compatible) {
         options.release.set(targetJavaVersion)
     }
 }
